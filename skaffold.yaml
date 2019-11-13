@@ -1,0 +1,16 @@
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: cvision-
+build:
+  artifacts:
+  - image: agilestacks/opencv
+    sync:
+      manual:
+      - src: 'src/**/*.py'
+        dest: .
+        strip: src/
+deploy:
+  kubectl:
+    manifests:
+      - k8s/*
