@@ -5,8 +5,10 @@ PYTHON     := python3
 PIP        := $(VIRTUALENV)/bin/activate; pip3
 PYLINT     := $(VIRTUALENV)/bin/activate; pylint
 PYTEST     := $(VIRTUALENV)/bin/activate; pytest
-FLASK      := $(VIRTUALENV)/bin/activate; flask
+FLASK      := $(VIRTUALENV)/bin/activate; cd src && flask
 DOCKER     := docker
+SKAFFOLD   := skaffold
+
 IMAGE      ?= agilestacks/opencvapp
 
 $(VIRTUALENV):
@@ -22,7 +24,7 @@ pytest: $(VIRTUALENV)
 	$(PYTEST) --junitxml=junit.xml
 
 flask: $(VIRTUALENV)
-	$(FLASK) run --port=80
+	$(FLASK) run --port=5000
 
 clean:
 	@rm -rf $(VIRTUALENV) __pycache__
@@ -33,7 +35,9 @@ image:
 docker:
 	test -e /dev/video0 \
 	&& $(DOCKER) run --rm -it --device /dev/video0 -p 5000:5000 $(IMAGE) \
-	|| $(DOCKER) run --rm -it -p 5000:5000 $(IMAGE)
+	|| $(DOCKER) run --rm -it -p 80:80 $(IMAGE)
 
+skaffold:
+	$(SKAFFOLD) dev --default-repo localhost:32000
 
 PHONY: clean install lint pytest run
