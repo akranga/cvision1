@@ -17,7 +17,7 @@ from flask_json import json_response
 
 
 application = Flask(__name__)
-application.config.from_pyfile(f"env/{application.config['ENV']}.py")
+application.config.from_pyfile(f"conf/{application.config['ENV']}.py")
 
 outputFrame = None
 lock = threading.Lock()
