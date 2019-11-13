@@ -1,34 +1,39 @@
 .DEFAULT_GOAL := run
 
-export FLASK_APP = api
-export FLASK_ENV = development
+VIRTUALENV := .venv
+PYTHON     := python3
+PIP        := $(VIRTUALENV)/bin/activate; pip3
+PYLINT     := $(VIRTUALENV)/bin/activate; pylint
+PYTEST     := $(VIRTUALENV)/bin/activate; pytest
+FLASK      := $(VIRTUALENV)/bin/activate; flask
+DOCKER     := docker
+IMAGE      ?= agilestacks/opencvapp
 
-venv:
-	@python3 -m venv .venv
-	@. ./.venv/bin/activate
-PHONY: venv
+$(VIRTUALENV):
+	$(PYTHON) -m venv $(abspath $@)
 
-pip:
-	@pip install -r requirements.txt
-	@pip install '.[test]'
-PHONY: pip
+install: $(VIRTUALENV)
+	$(PIP) install -r requirements.txt
+
+lint: $(VIRTUALENV)
+	$(PYLINT) api
+
+pytest: $(VIRTUALENV)
+	$(PYTEST) --junitxml=junit.xml
+
+flask: $(VIRTUALENV)
+	$(FLASK) run --port=80
 
 clean:
-	@rm -rf .venv
-	@rm -rf ./build
-	@rm -rf ./dist
-PHONY: clean
+	@rm -rf $(VIRTUALENV) __pycache__
 
-install: venv pip
+image:
+	$(DOCKER) build -t $(IMAGE) $(CURDIR)
 
-lint:
-	pylint api
-PHONY: lint
+docker:
+	test -e /dev/video0 \
+	&& $(DOCKER) run --rm -it --device /dev/video0 -p 5000:5000 $(IMAGE) \
+	|| $(DOCKER) run --rm -it -p 5000:5000 $(IMAGE)
 
-pytest:
-	pytest --junitxml=junit.xml
-PHONY: pytest
 
-run:
-	flask run
-PHONY: test
+PHONY: clean install lint pytest run

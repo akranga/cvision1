@@ -9,7 +9,7 @@ setup(
     name='python-flask',
     version='1.0.0',
     url='https://controlplane.agilestacks.io',
-    maintainer='AgileStacks',
+    maintainer='Agile Stacks Inc',
     maintainer_email='support@agilestacks.com',
     description='Python Computer Vision Application.',
     long_description=readme,

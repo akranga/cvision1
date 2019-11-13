@@ -1,10 +1,4 @@
-"""Application root"""
-import os
-import math
-from flask import Blueprint
-from flask_json import json_response
-from uptime import uptime
-# import the necessary packages
+#!/usr/bin/env python
 from pyimagesearch.motion_detection import SingleMotionDetector
 from imutils.video import VideoStream
 from flask import Response
@@ -16,11 +10,22 @@ import datetime
 import imutils
 import time
 import cv2
+import logging
+from uptime import uptime
 from imutils.video import FileVideoStream
+from flask_json import json_response
 
-BP = Blueprint('root', __name__)
 
-@BP.route('/')
+application = Flask(__name__)
+application.config.from_pyfile(f"env/{application.config['ENV']}.py")
+
+outputFrame = None
+lock = threading.Lock()
+# #vs = VideoStream(usePiCamera=1).start()
+vs = VideoStream(src=application.config["SOURCE"]).start()
+time.sleep(0.05)
+
+@application.route('/')
 def index():
     # return the rendered template
     return render_template("index.html")
@@ -42,8 +47,9 @@ def detect_motion(frameCount):
         frame = vs.read()
         time.sleep(0.05)
         if frame is None:
-            print("INFO: unable to connect to a webcam, using file stream instead")
-            vs = FileVideoStream("video/test_video.mp4").start()
+            file = application.config['FALLBACK_SOURCE']
+            application.logger.warn(f"Unable to connect to a webcam! Falling back to streaming: {file}")
+            vs = FileVideoStream(file).start()
             frame = vs.read()
             continue
         frame = imutils.resize(frame, width=400)
@@ -105,67 +111,30 @@ def generate():
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
             bytearray(encodedImage) + b'\r\n')
 
-@app.route("/video_feed")
+@application.route("/video_feed")
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
     return Response(generate(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-# check to see if this is the main thread of execution
-if __name__ == '__main__':
-    # construct the argument parser and parse command line arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--ip", type=str, default="0.0.0.0",
-        help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, default=8000,
-        help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("-f", "--frame-count", type=int, default=32,
-        help="# of frames used to construct the background model")
-    ap.add_argument("-s", "--source", type=str, default=0,
-        help="path to video source, defaults to local camera device")
-    args = vars(ap.parse_args())
-
-    # initialize the output frame and a lock used to ensure thread-safe
-    # exchanges of the output frames (useful for multiple browsers/tabs
-    # are viewing tthe stream)
-    outputFrame = None
-    lock = threading.Lock()
-
-    # initialize the webcam video stream and allow the camera sensor to warmup
-    vs = VideoStream(src=args["source"]).start()
-
-    time.sleep(2.0)
-
-    # start a thread that will perform motion detection
-    t = threading.Thread(target=detect_motion, args=(
-        args["frame_count"],))
-    t.daemon = True
-    t.start()
-
-    # start the flask app
-    app.run(host=args["ip"], port=args["port"], debug=True,
-        threaded=True, use_reloader=False)
-
-# release the video stream pointer
-vs.stop()
-
-@BP.route('/status')
+@application.route('/status')
 def root():
-    """Root endpoint"""
-    name = os.environ.get('APPLICATION_NAME')
-    version = os.environ.get('APPLICATION_VERSION')
-    environment_name = os.environ.get("ENVIRONMENT_NAME")
-
-    # do some cpu intensive computation
-    _x = 0.0001
-    for _ in range(0, 1000000):
-        _x = _x + math.sqrt(_x)
-
     return json_response(
         200,
-        name=name,
-        version=version,
+        status="ok",
         uptime=uptime(),
-        environment_name=environment_name,
     )
+
+t = threading.Thread(target=detect_motion, args=(application.config["FRAMES"],))
+t.daemon = True
+t.start()
+
+if __name__ == "__main__":
+    application.run(
+      host=application.config['HOST'], 
+      port=application.config['PORT'], 
+      threaded=True,
+    )
+    # release the video stream pointer
+    vs.stop()
