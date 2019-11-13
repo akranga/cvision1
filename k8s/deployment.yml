@@ -1,8 +1,30 @@
+
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: opecv
+  name: opencv
 spec:
-  containers:
-  - name: application
-    image: agilestacks/opencv
+  ports:
+  - port: 80
+  type: LoadBalancer
+  selector:
+    app: opencv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opencv
+spec:
+  selector:
+    matchLabels:
+      app: opencv
+  template:
+    metadata:
+      labels:
+        app: opencv
+    spec:
+      containers:
+      - name: opencv
+        image: agilestacks/opencv
+        ports:
+        - containerPort: 80
