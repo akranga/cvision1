@@ -10,9 +10,6 @@ build:
       - src: 'src/**/*.py'
         dest: .
         strip: src/
-      - src: 'src/static/**'
-        dest: .
-        strip: src/
 deploy:
   kubectl:
     manifests:
