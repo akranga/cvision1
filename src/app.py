@@ -113,7 +113,6 @@ def index():
     # return the rendered template
     return render_template("index.html")
 
-
 @application.route("/video_feed")
 def video_feed():
     # return the response generated along with the specific media
