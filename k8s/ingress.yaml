@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: opencv
+  labels:
+    app: opencv
+spec:
+  rules:
+  - host: opencv.app.anton1.antondemo0101.dev.superhub.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: opencv
+          servicePort: 80
+        

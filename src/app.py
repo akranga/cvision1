@@ -24,10 +24,7 @@ lock = threading.Lock()
 vs = VideoStream(src=application.config["SOURCE"]).start()
 time.sleep(0.05)
 
-@application.route('/')
-def index():
-    # return the rendered template
-    return render_template("index.html")
+
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
@@ -109,6 +106,13 @@ def generate():
         # yield the output frame in the byte format
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
             bytearray(encodedImage) + b'\r\n')
+
+
+@application.route('/')
+def index():
+    # return the rendered template
+    return render_template("index.html")
+
 
 @application.route("/video_feed")
 def video_feed():

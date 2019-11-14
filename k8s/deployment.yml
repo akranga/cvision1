@@ -25,6 +25,8 @@ spec:
     spec:
       containers:
       - name: opencv
-        image: agilestacks/opencv
+        image: dock-harbor.app.anton1.antondemo0101.dev.superhub.io/library/opencv
         ports:
         - containerPort: 80
+      imagePullSecrets:
+      - name: harbor-pullsecret

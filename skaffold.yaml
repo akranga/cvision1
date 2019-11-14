@@ -4,10 +4,13 @@ metadata:
   name: cvision-
 build:
   artifacts:
-  - image: agilestacks/opencv
+  - image: dock-harbor.app.anton1.antondemo0101.dev.superhub.io/library/opencv
     sync:
       manual:
       - src: 'src/**/*.py'
+        dest: .
+        strip: src/
+      - src: 'src/static/**'
         dest: .
         strip: src/
 deploy:
