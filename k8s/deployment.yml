@@ -6,7 +6,7 @@ metadata:
 spec:
   ports:
   - port: 80
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: opencv
 ---
@@ -25,8 +25,13 @@ spec:
     spec:
       containers:
       - name: opencv
-        image: dock-harbor.app.anton1.antondemo0101.dev.superhub.io/library/opencv
+        image: opencv
+        imagePullPolicy: Always
+        env: []
+        # - name: DEMO_GREETING
+        #   value: "{{.MAGIC_VAR}}"
         ports:
         - containerPort: 80
+      
       imagePullSecrets:
       - name: harbor-pullsecret

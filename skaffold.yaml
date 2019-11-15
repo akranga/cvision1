@@ -4,12 +4,32 @@ metadata:
   name: cvision-
 build:
   artifacts:
-  - image: dock-harbor.app.anton1.antondemo0101.dev.superhub.io/library/opencv
+  - image: opencv
     sync:
       manual:
       - src: 'src/**/*.py'
         dest: .
         strip: src/
+      - src: 'src/static/**'
+        dest: .
+        strip: src/
+    # kaniko:
+      # image: gcr.io/kaniko-project/executor:debug
+    #   image: agilestacks/sleepy 
+    #   # buildArgs:{}
+profiles:
+- name: aws
+  activation:
+  - kubeContext: anton1.antondemo0101.dev.superhub.io
+- name: incluster
+  build:
+    tagPolicy:
+      dateTime: {}
+    cluster:
+      namespace: harbor
+      dockerConfig: 
+        secretName: dockerconfig
+        # path: .dockerconfig
 deploy:
   kubectl:
     manifests:
