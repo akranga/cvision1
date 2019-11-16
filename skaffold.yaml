@@ -18,7 +18,10 @@ build:
     #   image: agilestacks/sleepy 
     #   # buildArgs:{}
 profiles:
-- name: aws
+- name: nucs1
+  activation:
+  - kubeContext: nucs1.kubeflex.dev.superhub.io
+- name: anton1
   activation:
   - kubeContext: anton1.antondemo0101.dev.superhub.io
 - name: incluster
@@ -26,10 +29,8 @@ profiles:
     tagPolicy:
       dateTime: {}
     cluster:
-      namespace: harbor
       dockerConfig: 
         secretName: dockerconfig
-        # path: .dockerconfig
 deploy:
   kubectl:
     manifests:

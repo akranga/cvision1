@@ -20,11 +20,12 @@ application.config.from_pyfile(f"conf/{application.config['ENV']}.py")
 
 outputFrame = None
 lock = threading.Lock()
+source = application.config["SOURCE"]
+application.logger.info(f"Starting vieo streaming from: {source}!")
+time.sleep(5)
 # #vs = VideoStream(usePiCamera=1).start()
-vs = VideoStream(src=application.config["SOURCE"]).start()
-time.sleep(0.05)
-
-
+vs = VideoStream(src=source).start()
+time.sleep(5)
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
@@ -44,7 +45,7 @@ def detect_motion(frameCount):
         time.sleep(0.05)
         if frame is None:
             file = application.config['FALLBACK_SOURCE']
-            application.logger.warn(f"Unable to connect to a webcam! Falling back to streaming: {file}")
+            application.logger.warn(f"Unable to connect to video source {source}! Falling back to streaming: {file}")
             vs = FileVideoStream(file).start()
             frame = vs.read()
             continue

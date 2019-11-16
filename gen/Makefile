@@ -18,7 +18,7 @@ DEST_DIR    := $(abspath out)
 $(DEST_DIR): 
 	mkdir -p "$@"
 
-apply: $(SECRET_NAME)
+apply: $(SECRET_NAME) ingress.json
 
 $(SECRET_NAME): $(DEST_DIR)
 	$(jsonnet) -m $< dockerconfig.jsonnet
@@ -34,7 +34,7 @@ $(SECRET_NAME): $(DEST_DIR)
 	$(eval arg  := $(last $(subst -, ,$@)))
 	- $(kubectl) $(arg) -f "$</$(file)"
 
-clean: 
+clean:
 	- $(kubectl) delete secret $(SECRET_NAME)
 	rm -rf $(DEST_DIR)
 

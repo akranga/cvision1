@@ -27,11 +27,18 @@ spec:
       - name: opencv
         image: opencv
         imagePullPolicy: Always
-        env: []
-        # - name: DEMO_GREETING
-        #   value: "{{.MAGIC_VAR}}"
+        env: 
+        - name: FLASK_ENV
+          value: docker
+        - name: SOURCE
+          value: rtsp://admin:admin@192.168.123.90:554/cam/realmonitor
+        - name: OPENCV_LOG_LEVEL
+          value: v
+        - name: OPENCV_VIDEOIO_DEBUG
+          value: "1"
+          # value: http://131.173.8.23/mjpg/video.mjpg
         ports:
         - containerPort: 80
       
-      imagePullSecrets:
-      - name: harbor-pullsecret
+      # imagePullSecrets:
+      # - name: harbor-pullsecret

@@ -2,12 +2,13 @@
 
 VIRTUALENV := .venv
 PYTHON     := python3
-PIP        := $(VIRTUALENV)/bin/activate; pip3
-PYLINT     := $(VIRTUALENV)/bin/activate; pylint
-PYTEST     := $(VIRTUALENV)/bin/activate; pytest
-FLASK      := $(VIRTUALENV)/bin/activate; cd src && flask
+PIP        := source $(VIRTUALENV)/bin/activate; pip3
+PYLINT     := source $(VIRTUALENV)/bin/activate; pylint
+PYTEST     := source $(VIRTUALENV)/bin/activate; pytest
+FLASK      := source $(VIRTUALENV)/bin/activate; cd src && flask
 DOCKER     := docker
 SKAFFOLD   := skaffold
+SKAFFOLD_PROFILE := incluster
 
 IMAGE      ?= agilestacks/opencvapp
 
@@ -26,7 +27,7 @@ pytest: $(VIRTUALENV)
 flask: $(VIRTUALENV)
 	$(FLASK) run --port=5000
 
-clean: templates-clean
+clean: gen-clean
 	@rm -rf $(VIRTUALENV) __pycache__
 
 image:
@@ -43,12 +44,12 @@ gen-%:
 	$(MAKE) -C $(dir) $(target)
 
 skaffold-%: 
-	$(SKAFFOLD) -p incluster $(lastword $(subst -, ,$@))
+	$(SKAFFOLD) -p $(SKAFFOLD_PROFILE) $(lastword $(subst -, ,$@))
 
 skaffold-run:
-skaffold-dev: manifests
-skaffold: skaffold-dev
+skaffold-dev:
+skaffold: gen skaffold-dev
 
-manifests: gen-apply
+gen: gen-apply
 
-.PHONY: clean install lint pytest run manifests
+.PHONY: clean install lint pytest run gen
