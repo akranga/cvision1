@@ -18,12 +18,9 @@ build:
     #   image: agilestacks/sleepy 
     #   # buildArgs:{}
 profiles:
-- name: nucs1
-  activation:
-  - kubeContext: nucs1.kubeflex.dev.superhub.io
-- name: anton1
-  activation:
-  - kubeContext: anton1.antondemo0101.dev.superhub.io
+- name: kubectl
+  # activation:
+  # - env: KUBECONFIG=!
 - name: incluster
   build:
     tagPolicy:

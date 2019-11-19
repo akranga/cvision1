@@ -12,6 +12,18 @@
     },
   },
 
+  secret(name, type="Opaque"):: {
+    kind: "Secret",
+    apiVersion: "v1",
+    type: "Opaque",
+    metadata: {
+      name: name,
+      annotations: {},
+      labels: {},
+    },
+    data: {},
+  },
+
   ingressRule(host, serviceName, servicePort=80, path="/"):: {
     host: host,
     http: {
