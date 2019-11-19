@@ -1,10 +1,9 @@
-.DEFAULT_GOAL := gen skaffold-run
+.DEFAULT_GOAL := deploy
 
 DOCKER     := docker
 SKAFFOLD   := skaffold
 
 export SKAFFOLD_PROFILE   ?= incluster
-export SKAFFOLD_NAMESPACE ?= default
 
 export HUB_APP_NAME ?= opencvapp
 
@@ -12,7 +11,9 @@ clean: gen-delete
 	@rm -rf $(VIRTUALENV) __pycache__
 
 skaffold-%: 
-	$(SKAFFOLD) -p $(SKAFFOLD_PROFILE) $(lastword $(subst -, ,$@))
+	$(SKAFFOLD) $(lastword $(subst -, ,$@))
+
+skaffold-delete: gen-delete
 
 skaffold: gen skaffold-dev
 
@@ -21,4 +22,6 @@ gen-% src-%:
 
 gen: gen-apply
 
-.PHONY: clean install lint pytest run gen
+deploy: gen skaffold-run
+
+.PHONY: clean deploy
