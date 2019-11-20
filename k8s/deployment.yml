@@ -15,6 +15,7 @@ kind: Deployment
 metadata:
   name: opencv
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: opencv

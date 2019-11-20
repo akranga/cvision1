@@ -10,4 +10,5 @@ RUN pip install --compile --no-cache-dir -r requirements.txt
 
 EXPOSE 80
 
-ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:80", "app"]
+# ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:80", "app"]
+ENTRYPOINT ["flask", "run", "-h", "0.0.0.0", "-p", "80"]

@@ -3,9 +3,8 @@
 DOCKER     := docker
 SKAFFOLD   := skaffold
 
-export SKAFFOLD_PROFILE   ?= incluster
-
-export HUB_APP_NAME ?= opencvapp
+export SKAFFOLD_PROFILE ?= incluster
+export HUB_APP_NAME     ?= opencvapp
 
 clean: gen-delete
 	@rm -rf $(VIRTUALENV) __pycache__
@@ -13,15 +12,15 @@ clean: gen-delete
 skaffold-%: 
 	$(SKAFFOLD) $(lastword $(subst -, ,$@))
 
-skaffold-delete: gen-delete
-
 skaffold: gen skaffold-dev
 
-gen-% src-%:
+skaffold-delete: gen-delete
+
+gen-% src-% hub-%:
 	$(MAKE) -C "$(firstword $(subst -, ,$@))" $(lastword $(subst -, ,$@))
 
 gen: gen-apply
-
+hub: hub-deploy
 deploy: gen skaffold-run
 
 .PHONY: clean deploy

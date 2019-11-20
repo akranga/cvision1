@@ -19,3 +19,8 @@ pytest: $(VIRTUALENV)
 
 flask: $(VIRTUALENV)
 	$(FLASK) run --port=5000
+
+deploy: install flask
+
+.DEFAULT_GOAL := deploy
+.PHONY := deploy flask pytest lint install 
