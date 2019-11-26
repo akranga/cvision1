@@ -1,24 +1,21 @@
-.DEFAULT_GOAL := apply
+.DEFAULT_GOAL := all
 
 aws     := aws
 kubectl := kubectl
+yq      := yq
 
-export AWS_ACCOUNT_ID ?= $(shell $(aws) sts get-caller-identity --query 'Account' --output text)
-
-JSONNET_ARGS += -V AWS_ACCOUNT_ID
+JSONNET_ARGS += -V AWS_ACCOUNT_ID=$(shell $(aws) sts get-caller-identity --query 'Account' --output text)
 JSONNET_ARGS += $(shell awk 'BEGIN{for(v in ENVIRON) print "-V " v}' | grep " HUB_" | xargs)
 jsonnet := jsonnet $(JSONNET_ARGS)
 
-JSONNET := $(wildcard *.jsonnet)
+MANIFESTS  := $(addsuffix .yaml,$(basename $(wildcard *.jsonnet)))
 
-define render_apply
-	$(jsonnet) $(2) | $(kubectl) $(1) -f -;
-endef
+$(MANIFESTS):
+	$(jsonnet) $(basename $@).jsonnet | $(yq) r - > $@
 
-apply: $(JSONNET)
-	$(foreach file,$^,$(call render_apply,$@,$(file)))
+all: $(MANIFESTS)
 
-delete: $(JSONNET)
-	$(foreach file,$^,$(call render_apply_noerror,$@,$(file)))
+clean:
+	rm -rf $(MANIFESTS)
 
-.PHONY: apply delete
+.PHONY: generate clean

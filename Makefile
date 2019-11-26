@@ -6,21 +6,21 @@ SKAFFOLD   := skaffold
 export SKAFFOLD_PROFILE ?= incluster
 export HUB_APP_NAME     ?= opencvapp
 
-clean: gen-delete
-	@rm -rf $(VIRTUALENV) __pycache__
-
 skaffold-%: 
 	$(SKAFFOLD) $(lastword $(subst -, ,$@))
 
 skaffold: gen skaffold-dev
 
-skaffold-delete: gen-delete
-
 gen-% src-% hub-%:
-	$(MAKE) -C "$(firstword $(subst -, ,$@))" $(lastword $(subst -, ,$@))
+	$(eval dir    := $(firstword $(subst -, ,$@)))
+	$(eval target := $(word 2,$(subst -, ,$@)))
+	$(MAKE) -C "$(dir)" $(target)
 
-gen: gen-apply
+clean: gen-clean src-clean
+gen: gen-all
 hub: hub-deploy
-deploy: gen skaffold-run
+dev: gen skaffold-dev
+run deploy: gen skaffold-run
+delete undeploy: skaffold-delete
 
-.PHONY: clean deploy
+.PHONY: clean gen hub dev run deploy undeploy
