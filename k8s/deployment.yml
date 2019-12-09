@@ -13,7 +13,7 @@ spec:
         app: opencv
     spec:
       containers:
-      - name: opencv
+      - name: application
         image: opencv
         imagePullPolicy: Always
         env: 

@@ -14,10 +14,12 @@ build:
         dest: .
         strip: src/
 deploy:
-  kubectl:
-    manifests:
-    - gen/*.yaml
-    - k8s/*
+  kustomize:
+    path: .
+  # kubectl:
+  #   manifests:
+  #   - gen/*.yaml
+    # - k8s/*
     # kaniko:
       # image: gcr.io/kaniko-project/executor:debug
     #   image: agilestacks/sleepy 
