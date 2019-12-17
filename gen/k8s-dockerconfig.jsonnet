@@ -1,4 +1,4 @@
-local k8s = import 'libs/templates.libsonnet';
+local k8s = import 'lib/k8s.libsonnet';
 local docker_host = std.extVar("HUB_DOCKER_HOST");
 local stripped_hostname = std.split(docker_host,":")[0];
 
@@ -9,7 +9,7 @@ local dockerconfig = {
       password: std.extVar("HUB_DOCKER_PASS"),
     }
   },
-  credHelpers: import 'libs/credhelpers.libsonnet',
+  credHelpers: import 'lib/dockerconfig.libsonnet',
 };
 
 k8s.secret("dockerconfig") {

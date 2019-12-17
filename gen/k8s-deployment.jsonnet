@@ -1,10 +1,9 @@
-local k8s = import 'libs/templates.libsonnet';
+local k8s = import 'lib/k8s.libsonnet';
 local app = std.extVar("HUB_APP_NAME");
 
 k8s.deployment(name=app) {
   metadata+: {
     name: "application"
-    // name: "$(HUB_APP_NAME)"
   },
   spec+: {
     template+: {

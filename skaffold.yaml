@@ -1,7 +1,7 @@
 apiVersion: skaffold/v1
 kind: Config
 metadata:
-  name: cvision-
+  name: application-
 build:
   artifacts:
   - image: opencv
@@ -13,17 +13,15 @@ build:
       - src: 'src/static/**'
         dest: .
         strip: src/
+  tagPolicy:
+    dateTime: {}
 deploy:
-  kustomize:
-    path: .
-  # kubectl:
-  #   manifests:
-  #   - gen/*.yaml
+  # kustomize:
+  #   path: .
+  kubectl:
+    manifests:
+    - gen/*.yaml
     # - k8s/*
-    # kaniko:
-      # image: gcr.io/kaniko-project/executor:debug
-    #   image: agilestacks/sleepy 
-    #   # buildArgs:{}
 profiles:
 - name: local
   activation:
