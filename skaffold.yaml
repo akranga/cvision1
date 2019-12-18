@@ -7,12 +7,15 @@ build:
   - image: opencv
     sync:
       manual:
-      - src: 'src/**/*.py'
+      - src: 'app/**/*.py'
         dest: .
-        strip: src/
-      - src: 'src/static/**'
+        strip: app/
+      - src: 'app/static/**'
         dest: .
-        strip: src/
+        strip: app/
+      - src: 'app/templates/**'
+        dest: .
+        strip: app/
   tagPolicy:
     dateTime: {}
 deploy:
@@ -31,5 +34,5 @@ profiles:
     tagPolicy:
       dateTime: {}
     cluster:
-      dockerConfig: 
+      dockerConfig:
         secretName: dockerconfig

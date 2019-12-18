@@ -1,14 +1,26 @@
-FROM python:3.7
+FROM python:3.7-alpine as base
 
-ENV FLASK_ENV docker
+FROM base AS dependencies
+COPY requirements.txt ./
+RUN apk add --no-cache curl python3 pkgconfig python3-dev openssl-dev libffi-dev musl-dev make gcc
+RUN pip install -r requirements.txt
 
-WORKDIR /app
-COPY src/ .
+# --- Release with Alpine ----
+FROM base
 
-RUN pip install --upgrade pip
-RUN pip install --compile --no-cache-dir -r requirements.txt
+ENV FLASK_DEBUG=1
 
-EXPOSE 80
+# Create app directory
+RUN mkdir /pyapp
+WORKDIR /pyapp
 
-# ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:80", "app"]
-ENTRYPOINT ["flask", "run", "-h", "0.0.0.0", "-p", "80"]
+COPY --from=dependencies /root/.cache /root/.cache
+COPY requirements.txt ./
+
+# Install app dependencies
+RUN pip install -r requirements.txt
+COPY app/ ./app
+COPY run.py ./
+
+#CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--reload", "run"]
