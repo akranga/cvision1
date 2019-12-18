@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations: {}
+  labels: {}
+  name: detective
+spec:
+  rules:
+  - host: detective.app.cluster-blue.antondemo01.dev.superhub.io
+    http:
+      paths:
+      - backend:
+          serviceName: detective
+          servicePort: 8000
+        path: /

@@ -16,5 +16,3 @@ build
 dist
 kubernetes.yaml
 .DS_STORE
-gen/*.yaml
-gen/lib

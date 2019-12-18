@@ -1,0 +1,14 @@
+#!/bin/bash
+export HUB_APP_NAME="detective"
+export DOMAIN_NAME="cluster-blue.antondemo01.dev.superhub.io"
+export HUB_INGRESS_HOST="$HUB_APP_NAME.app.$DOMAIN_NAME"
+export HUB_DOCKER_HOST="registry-harbor.app.$DOMAIN_NAME"
+export HUB_DOCKER_USER="admin"
+export HUB_DOCKER_PASS="Harbor12345"
+export HUB_KAFKA_URL="manually looked to stack outputs"
+export SKAFFOLD_DEFAULT_REPO="$HUB_DOCKER_HOST/library"
+export SKAFFOLD_PROFILE="local"
+echo $HUB_DOCKER_PASS | docker login $HUB_DOCKER_HOST -u $HUB_DOCKER_USER --password-stdin
+export KUBECONFIG=$(pwd)/kubeconfig.$DOMAIN_NAME.yaml
+
+source cluster-blue.antondemo01.dev.superhub.io
