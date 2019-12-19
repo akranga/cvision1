@@ -1,30 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: opencv
+  name: pydashboard
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: opencv
+      app: pydashboard
   template:
     metadata:
       labels:
-        app: opencv
+        app: pydashboard
     spec:
       containers:
       - name: application
-        image: opencv
+        image: pydashboard
         imagePullPolicy: Always
-        env: 
+        env:
         - name: FLASK_ENV
           value: docker
-        - name: SOURCE
-          value: rtsp://admin:admin@192.168.123.90:554/cam/realmonitor
-        - name: OPENCV_LOG_LEVEL
-          value: v
-        - name: OPENCV_VIDEOIO_DEBUG
-          value: "1"
         ports:
         - containerPort: 80
         resources:

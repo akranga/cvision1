@@ -9,7 +9,7 @@ k8s.deployment(name=app) {
     template+: {
       spec+: {
         containers: [
-          k8s.container("application", "opencv", ports=[80],)
+          k8s.container("application", "pydashboard", ports=[8000],)
         ],
       }
     },
