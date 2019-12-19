@@ -1,35 +1,31 @@
 apiVersion: skaffold/v1
-kind: Config
-metadata:
-  name: application-
 build:
   artifacts:
-  - image: opencv
+  - image: detective
     sync:
       manual:
-      - src: 'src/**/*.py'
-        dest: .
+      - dest: /app
+        src: src/**/*.py
         strip: src/
-      - src: 'src/static/**'
-        dest: .
+      - dest: /app
+        src: src/static/**
         strip: src/
-  tagPolicy:
-    dateTime: {}
 deploy:
-  # kustomize:
-  #   path: .
   kubectl:
     manifests:
     - gen/*.yaml
-    # - k8s/*
+kind: Config
+metadata:
+  name: detective-
 profiles:
-- name: local
-  activation:
+- activation:
   - env: KUBECONFIG=!
-- name: incluster
   build:
-    tagPolicy:
-      dateTime: {}
+    local:
+      useDockerCLI: true
+  name: local
+- build:
     cluster:
-      dockerConfig: 
-        secretName: dockerconfig
+      dockerConfig:
+        secretName: detective-dockerconfig
+  name: incluster

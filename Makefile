@@ -11,16 +11,15 @@ skaffold-%:
 
 skaffold: gen skaffold-dev
 
-gen-% src-% hub-%:
+src-% .hub-%:
 	$(eval dir    := $(firstword $(subst -, ,$@)))
 	$(eval target := $(word 2,$(subst -, ,$@)))
 	$(MAKE) -C "$(dir)" $(target)
 
-clean: gen-clean src-clean
-gen: gen-all
-hub: hub-deploy
-dev: gen skaffold-dev
-run deploy: gen skaffold-run
+clean: .hub-clean src-clean
+reconfigure generate: .hub-generate
+dev: generate skaffold-dev
+run deploy: generate skaffold-run
 delete undeploy: skaffold-delete
 
-.PHONY: clean gen hub dev run deploy undeploy
+.PHONY: clean generate hub dev run
