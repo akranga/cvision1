@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  labels: {}
+  name: application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: detective
+  template:
+    metadata:
+      labels:
+        app: detective
+    spec:
+      containers:
+      - command: []
+        env: []
+        image: pydashboard
+        imagePullPolicy: Always
+        name: application
+        ports:
+        - containerPort: 8000
+        resources:
+          limits: {}
+      initContainers: []
