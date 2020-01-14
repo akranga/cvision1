@@ -4,7 +4,7 @@ local app = std.extVar("HUB_APP_NAME");
 local result = k8s.service(name=app, ports=[80],) {
   spec+: {
     selector+: {
-      app: app
+      app: "application"
     },
   },
 };

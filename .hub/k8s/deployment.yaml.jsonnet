@@ -1,5 +1,5 @@
 local k8s = import 'k8s.libsonnet';
-local template = import 'deployment-template.json';
+local template = import 'deployment.json';
 local app = std.extVar("HUB_APP_NAME");
 
 local result = template + {

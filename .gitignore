@@ -12,5 +12,13 @@ __pycache__
 .hub/hub.elaborate
 .hub/hub.state
 .hub/manifests
-.hub/templates/*.json
 !.hub/templates/vscode-settings-template.json
+k8s/deployment.yaml
+k8s/ingress.yaml
+k8s/service.yaml
+k8s/kaniko-secret.yaml
+.hub/lib
+skaffold.yaml
+skaffold.json
+deployment.json
+.dockerconfig.json

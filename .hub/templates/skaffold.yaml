@@ -23,8 +23,7 @@ deploy:
   #   path: .
   kubectl:
     manifests:
-    - gen/*.yaml
-    # - k8s/*
+    - k8s/*
 profiles:
 - name: local
   activation:
@@ -32,3 +31,9 @@ profiles:
   build:
     local:
       useDockerCLI: true
+- name: incluster
+  build:
+    cluster:
+      dockerConfig:
+        path: .dockerconfig.json
+  

@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: application
+      app: CHANGEMEPLEASE
   template:
     metadata:
       labels:
-        app: application
+        app: CHANGEMEPLEASE
     spec:
       containers:
       - image: CHANGEMEPLEASE
         imagePullPolicy: Always
-        name: application
+        name: CHANGEMEPLEASE
         ports:
         - containerPort: 80

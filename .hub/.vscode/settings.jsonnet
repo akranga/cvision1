@@ -1,4 +1,4 @@
-local template = import 'vscode-settings-template.json';
+local template = import 'vscode-settings.json';
 local domain_name = std.extVar("HUB_DOMAIN_NAME");
 local kubeconfig  = std.extVar("KUBECONFIG");
 local docker_registry = std.extVar("HUB_DOCKER_HOST") + "/library";
